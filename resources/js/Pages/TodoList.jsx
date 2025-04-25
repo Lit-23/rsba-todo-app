@@ -52,9 +52,9 @@ export default function TodoList({ todoLists }) {
                             </div>
                             <div>
                                 {
-                                    todoLists.map((todo) => (
+                                    todoLists.length > 0 ? todoLists.map((todo) => (
                                         <TodoCard key={todo.id} todo={todo} />
-                                    ))
+                                    )) : <p className='text-center uppercase font-bold text-gray-600'>No todos found</p>
                                 }
                             </div>
                         </div>
