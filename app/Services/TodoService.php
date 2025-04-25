@@ -18,7 +18,22 @@ class TodoService
         //
     }
 
-    //
+    // Get all todo lists for the authenticated user
+    public function getTodoLists()
+    {
+        try{
+            
+            $todoLists = Auth::user()->todoLists; // get the todo list using Eloquent Relationship
+            return $todoLists;
+
+        } catch (\Exception $e) {
+
+            return ['success' => false, 'message' => 'Get todo lists failed: ' . $e->getMessage()];
+
+        }
+    }
+
+    // create new todo
     public function createTodoList($data)
     {
         try{
@@ -27,8 +42,14 @@ class TodoService
                 'title' => $data['title'],
                 'description' => $data['description']
             ]);
-
             return ['success' => true, 'message' => 'Added task successfully!'];
+
+            // // using Eloquent Relationship
+            // $user = Auth::user();
+            // $newTodo = $user->todoLists()->create([
+            //     'title' => $data['title'],
+            //     'description' => $data['description'],
+            // ]);
 
         } catch (\Exception $e) {
 

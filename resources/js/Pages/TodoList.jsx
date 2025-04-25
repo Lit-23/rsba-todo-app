@@ -8,7 +8,8 @@ import { FaPlus } from "react-icons/fa6";
 import TodoInput from '@/Components/TodoComp/TodoInput';
 import axios from "axios";
 
-export default function TodoList() {
+export default function TodoList({ todoLists }) {
+    console.log("todoLists", todoLists);
     const [showModal, setShowModal] = useState(false);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -50,7 +51,11 @@ export default function TodoList() {
                                 </PrimaryButton>
                             </div>
                             <div>
-                                <TodoCard />
+                                {
+                                    todoLists.map((todo) => (
+                                        <TodoCard key={todo.id} todo={todo} />
+                                    ))
+                                }
                             </div>
                         </div>
                     </div>

@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Services\TodoService;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TodoController extends Controller
 {
@@ -19,12 +20,10 @@ class TodoController extends Controller
 
     public function index()
     {
-        // $todoLists = $this->todoService->getTodoLists();
-        // return Inertia::render('Todo/Todo', [
-        //     "userId" => auth()->user()->id,
-        //     "todoLists" => $todoLists,
-        // ]);
-        return Inertia::render('TodoList');
+        $todoLists = $this->todoService->getTodoLists();
+        return Inertia::render('TodoList', [
+            "todoLists" => $todoLists,
+        ]);
     }
 
     public function create(Request $request)
