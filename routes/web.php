@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\TodoController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -14,9 +15,10 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/todo-list', function () {
-    return Inertia::render('TodoList');
-})->middleware(['auth', 'verified'])->name('todo.list');
+Route::middleware('auth', 'verified')->group(function () {
+    Route::get('/todo-list', [TodoController::class, 'index'])->name('todo.list');
+    Route::post('/create-todo', [TodoController::class, 'create'])->name('create.todo');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

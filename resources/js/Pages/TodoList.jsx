@@ -6,6 +6,7 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import TodoInput from '@/Components/TodoComp/TodoInput';
+import axios from "axios";
 
 export default function TodoList() {
     const [showModal, setShowModal] = useState(false);
@@ -14,8 +15,17 @@ export default function TodoList() {
 
     const handleCreateTodo = (e) => {
         e.preventDefault();
+        
+        axios.post('/create-todo', {title, description}).then(function (response) {
+            if(response.status === 200){
+                console.log("stat200",response);
+            }
+        }).catch(function (error) {
+            console.log("statError",error);
+        });
+
         setShowModal(false);
-        alert(`Todo Created: ${title} - ${description}`);
+        // alert(`Todo Created: ${title} - ${description}`);
     }
     return (
         <AuthenticatedLayout
