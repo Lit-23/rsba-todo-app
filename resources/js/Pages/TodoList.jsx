@@ -10,8 +10,9 @@ import TodoInput from '@/Components/TodoComp/TodoInput';
 import axios from "axios";
 import { router } from '@inertiajs/react'
 
-export default function TodoList({ todoLists }) {
+export default function TodoList({ data }) {
     // console.log("todoLists", todoLists);
+    const [todoLists, setTodoLists] = useState(data);
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [todoData, setTodoData] = useState({
@@ -53,6 +54,7 @@ export default function TodoList({ todoLists }) {
         }).then(function (response) {
             if(response.status === 200){
                 console.log("stat200",response);
+                setTodoLists((prevTodos) => [response.data.todo, ...prevTodos]);
             }
         }).catch(function (error) {
             console.log("statError",error);
@@ -85,6 +87,16 @@ export default function TodoList({ todoLists }) {
         
         axios.post('/update-todo', todoData).then(function (response) {
             if(response.status === 200){
+                setTodoLists((prevTodos) => prevTodos.map((todo) => {
+                    if(todo.id === todoData.todoId){
+                        return {
+                            ...todo,
+                            title: todoData.title,
+                            description: todoData.description
+                        }
+                    }
+                    return todo;
+                }));
                 setShowModal(false);
                 console.log("stat200",response);
             }
@@ -108,6 +120,7 @@ export default function TodoList({ todoLists }) {
         // });
         router.delete(`/delete-todo?todoId=${deleteTodo.todoId}`, {
             onSuccess: () => {
+                // setTodoLists((prevTodos) => prevTodos.filter((todo) => todo.id !== deleteTodo.todoId));
                 setShowDeleteModal(false);
             },
             onError: (error) => {}
@@ -144,7 +157,7 @@ export default function TodoList({ todoLists }) {
                                 {
                                     todoLists.length > 0 ? todoLists.map((todo) => (
                                         <TodoCard key={todo.id} todo={todo} onSubmit={handleUpdateDeleteTodo} />
-                                    )) : <p className='text-center uppercase font-bold text-gray-600'>No todos found</p>
+                                    )) : <p className='text-center uppercase font-bold text-gray-600 p-6 bg-gray-50'>No todos found</p>
                                 }
                             </div>
                         </div>

@@ -22,7 +22,7 @@ class TodoController extends Controller
     {
         $todoLists = $this->todoService->getTodoLists();
         return Inertia::render('TodoList', [
-            "todoLists" => $todoLists,
+            "data" => $todoLists,
         ]);
     }
 
@@ -34,9 +34,11 @@ class TodoController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $todoList = $this->todoService->createTodo($data);
+        $response = $this->todoService->createTodo($data);
 
-        return Redirect::route('todo.list')->with('success', 'Todo list created successfully!');
+        return response()->json($response, 200);
+
+        // return Redirect::route('todo.list')->with('success', 'Todo list created successfully!');
     }
 
     // update todo

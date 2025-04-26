@@ -41,7 +41,11 @@ class TodoService
                 'title' => $data['title'],
                 'description' => $data['description']
             ]);
-            return ['success' => true, 'message' => 'Added task successfully!'];
+            return [
+                'success' => true, 
+                'message' => 'Added task successfully!',
+                'todo' => $newTodo
+            ];
 
             // // using Eloquent Relationship
             // $user = Auth::user();

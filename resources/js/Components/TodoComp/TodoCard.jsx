@@ -3,19 +3,14 @@ import ActionButton from './ActionButton';
 import { formatDate } from '@/Utils/utils';
 
 export default function TodoCard({ todo, onSubmit }) {
-  // const handleButtonClick = (action, todo) => {
-  //   console.log(`Action: ${action}`, todo); // Log the action and todo data
-  //   alert(`Action: ${action}, Todo: ${todo.title}`);
-  // };
-
   return (
-    <div className='flex align-middle items-center'>
+    <div className='flex align-middle items-center bg-gray-50 px-2 py-4'>
 
         {/* TASK TITLE */}
         <div className='flex-1'>{todo.title}</div>
 
         {/* CREATION DATE */}
-        <div className='w-[150px] text-center'>{formatDate(todo.created_at)}</div>
+        <div className='w-[150px] text-sm text-center'>{formatDate(todo.created_at)}</div>
 
         {/* ACTIONS */}
         <div className='w-[150px] flex justify-end gap-2'>
