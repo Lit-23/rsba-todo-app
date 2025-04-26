@@ -18,12 +18,12 @@ DownloadLink: https://www.pgadmin.org/download/
 After downloading and installing the app, create a database.
 
 Configure the Database Details in your .env to Connect the Database and your application. Sample Config:
-DB_CONNECTION=pgsql
-DB_HOST=127.0.0.1                      <!-- default -->
-DB_PORT=5432                           <!-- default -->
-DB_DATABASE=rs_bernaldo_associates     <!-- database name -->
-DB_USERNAME=postgres                   <!-- this is the default -->
-DB_PASSWORD=1234                       <!-- the password on your db if theres any -->
+- DB_CONNECTION=pgsql
+- DB_HOST=127.0.0.1                      <!-- default -->
+- DB_PORT=5432                           <!-- default -->
+- DB_DATABASE=rs_bernaldo_associates     <!-- database name -->
+- DB_USERNAME=postgres                   <!-- this is the default -->
+- DB_PASSWORD=1234                       <!-- the password on your db if theres any -->
 
 Once done, you now run:
 - php artisan migrate   <!-- to migrate all your database tables -->
