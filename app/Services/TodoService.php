@@ -3,7 +3,6 @@
 namespace App\Services;
 use Illuminate\Http\Request;
 use DB;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 use App\Models\TodoList;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +21,7 @@ class TodoService
     public function getTodoLists()
     {
         try{
-            
+
             $todoLists = Auth::user()->todoLists; // get the todo list using Eloquent Relationship
             return $todoLists;
 
@@ -34,7 +33,7 @@ class TodoService
     }
 
     // create new todo
-    public function createTodoList($data)
+    public function createTodo($data)
     {
         try{
             $newTodo = TodoList::create([
@@ -54,6 +53,24 @@ class TodoService
         } catch (\Exception $e) {
 
             return ['success' => false, 'message' => 'Add task failed: ' . $e->getMessage()];
+
+        }
+    }
+
+    // update todo
+    public function updateTodo($data)
+    {
+        try{
+            $updateTodo = TodoList::where("id", $data["todoId"])->update([
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'updated_at' => now()
+            ]);
+            return ['success' => true, 'message' => 'Updated todo successfully!'];
+
+        } catch (\Exception $e) {
+
+            return ['success' => false, 'message' => 'Updated todo failed: ' . $e->getMessage()];
 
         }
     }

@@ -3,10 +3,10 @@ import ActionButton from './ActionButton';
 import { formatDate } from '@/Utils/utils';
 
 export default function TodoCard({ todo, onSubmit }) {
-  const handleButtonClick = (action, todo) => {
-    console.log(`Action: ${action}`, todo); // Log the action and todo data
-    alert(`Action: ${action}, Todo: ${todo.title}`);
-  };
+  // const handleButtonClick = (action, todo) => {
+  //   console.log(`Action: ${action}`, todo); // Log the action and todo data
+  //   alert(`Action: ${action}, Todo: ${todo.title}`);
+  // };
 
   return (
     <div className='flex align-middle items-center'>
@@ -22,12 +22,12 @@ export default function TodoCard({ todo, onSubmit }) {
             <ActionButton
                 action="edit"
                 tooltip="This is a tooltip"
-                onClick={() => handleButtonClick('edit', todo)} // Pass the todo data
+                onClick={() => onSubmit('edit', todo)} // Pass the todo data
             />
             <ActionButton
                 action="delete"
                 tooltip="This is a tooltip"
-                onClick={() => handleButtonClick('delete', todo)} // Pass the todo data
+                onClick={() => onSubmit('delete', todo)} // Pass the todo data
             />
         </div>
 

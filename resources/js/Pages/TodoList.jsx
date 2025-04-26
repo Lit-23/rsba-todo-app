@@ -3,21 +3,47 @@ import TodoModal from '@/Components/TodoComp/TodoModal';
 import TodoCard from '@/Components/TodoComp/TodoCard';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import TodoInput from '@/Components/TodoComp/TodoInput';
 import axios from "axios";
 
 export default function TodoList({ todoLists }) {
-    console.log("todoLists", todoLists);
+    // console.log("todoLists", todoLists);
     const [showModal, setShowModal] = useState(false);
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
+    const [todoData, setTodoData] = useState({
+        modalTitle: 'Create Todo',
+        todoId: null,
+        title: '',
+        description: '',
+    });
 
+    // handle change todo data
+    const handleChangeTodoData = (name, value) => {
+        setTodoData((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    }
+
+    // handle reset tododata
+    const handleTodoDataReset = () => {
+        setTodoData({
+            modalTitle: 'Create Todo',
+            todoId: null,
+            title: '',
+            description: '',
+        });
+    }
+
+    // handle create todo
     const handleCreateTodo = (e) => {
         e.preventDefault();
         
-        axios.post('/create-todo', {title, description}).then(function (response) {
+        axios.post('/create-todo', {
+            title: todoData.title, 
+            description: todoData.description
+        }).then(function (response) {
             if(response.status === 200){
                 console.log("stat200",response);
             }
@@ -26,8 +52,42 @@ export default function TodoList({ todoLists }) {
         });
 
         setShowModal(false);
-        // alert(`Todo Created: ${title} - ${description}`);
     }
+
+    // handle update or delete todo
+    const handleUpdateDeleteTodo = (action, todo_data) => {
+        console.log(action, todo_data);
+        if(action === "edit"){
+            handleChangeTodoData('modalTitle', 'Update Todo');
+            handleChangeTodoData('todoId', todo_data.id);
+            handleChangeTodoData('title', todo_data.title);
+            handleChangeTodoData('description', todo_data.description);
+            setShowModal(true);
+        }else if(action === "delete"){
+            // handle delete todo
+            alert(`Todo Deleted: ${todo_data.title}`);
+        }
+    }
+
+    // handle update todo
+    const handleUpdateTodoDetails = (e) => {
+        e.preventDefault();
+        
+        axios.post('/update-todo', todoData).then(function (response) {
+            if(response.status === 200){
+                setShowModal(false);
+                console.log("stat200",response);
+            }
+        }).catch(function (error) {
+            // setShowModal(false);
+            console.log("statError",error);
+        });
+    }
+
+    useEffect(() => {
+        console.log("todoData", todoData);
+    }, [todoData]);
+
     return (
         <AuthenticatedLayout
             header={
@@ -53,7 +113,7 @@ export default function TodoList({ todoLists }) {
                             <div>
                                 {
                                     todoLists.length > 0 ? todoLists.map((todo) => (
-                                        <TodoCard key={todo.id} todo={todo} />
+                                        <TodoCard key={todo.id} todo={todo} onSubmit={handleUpdateDeleteTodo} />
                                     )) : <p className='text-center uppercase font-bold text-gray-600'>No todos found</p>
                                 }
                             </div>
@@ -63,23 +123,27 @@ export default function TodoList({ todoLists }) {
             </div>
 
             {/* MODALS */}
-            {/* START ------------------ CREATE TODO ------------------ START */}
-            <TodoModal isOpen={showModal} onClose={() => setShowModal(false)}>
-                <h2 className="text-xl font-bold mb-4">Create Todo</h2>
-                <form onSubmit={handleCreateTodo}>
+            {/* START ------------------ CREATE OR UPDATE TODO ------------------ START */}
+            <TodoModal isOpen={showModal} onClose={() => {setShowModal(false); handleTodoDataReset()}}>
+                <h2 className="text-xl font-bold mb-4">{todoData.modalTitle}</h2>
+                <form onSubmit={
+                    todoData.modalTitle === 'Create Todo' && !todoData.todoId ? handleCreateTodo 
+                    : todoData.modalTitle === 'Update Todo' && todoData.todoId ? handleUpdateTodoDetails
+                    : alert('Error: Something went wrong')
+                }>
                 
                     <TodoInput
                         label="Task Title"
                         name="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        value={todoData.title}
+                        onChange={(e) => handleChangeTodoData('title',e.target.value)}
                         placeholder="Enter your task title"
                     />
                     <TodoInput
                         label="Task Description"
-                        name="title"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
+                        name="description"
+                        value={todoData.description}
+                        onChange={(e) => handleChangeTodoData('description',e.target.value)}
                         placeholder="Enter your task description"
                     />
 
@@ -93,7 +157,7 @@ export default function TodoList({ todoLists }) {
                 
                 </form>
             </TodoModal>
-            {/* END   ------------------ CREATE TODO ------------------   END */}
+            {/* END   ------------------ CREATE OR UPDATE TODO ------------------   END */}
 
         </AuthenticatedLayout>
     );

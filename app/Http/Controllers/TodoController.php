@@ -26,16 +26,31 @@ class TodoController extends Controller
         ]);
     }
 
+    // create new todo
     public function create(Request $request)
     {
-        // dd($request->all());
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
 
-        $todoList = $this->todoService->createTodoList($data);
+        $todoList = $this->todoService->createTodo($data);
 
         return Redirect::route('todo.list')->with('success', 'Todo list created successfully!');
+    }
+
+    // update todo
+    public function update(Request $request)
+    {
+        // dd($request->all());
+        $data = $request->validate([
+            'todoId' => 'required|integer|exists:todo_lists,id',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+        ]);
+
+        $todoList = $this->todoService->updateTodo($data);
+
+        return Redirect::route('todo.list')->with('success', 'Todo list updated successfully!');
     }
 }
