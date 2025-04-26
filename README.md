@@ -34,10 +34,10 @@ Seeding users data:
 - php artisan db:seed --class=UserSeeder
 
 Seeded Users are as follows:
-User1:
+* User1:
 - email: admin@gmail.com
 - password: 12345678
-User2:
+* User2:
 - email: user@gmail.com
 - password: 12345678
 
