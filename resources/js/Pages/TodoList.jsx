@@ -25,6 +25,7 @@ export default function TodoList({ data }) {
         todoId: null,
         title: ''
     });
+    const [error, setError] = useState(null);
 
     // handle change todo data
     const handleChangeTodoData = (name, value) => {
@@ -36,6 +37,7 @@ export default function TodoList({ data }) {
 
     // handle reset tododata
     const handleTodoDataReset = () => {
+        setError(null);
         setTodoData({
             modalTitle: 'Create Todo',
             todoId: null,
@@ -54,13 +56,15 @@ export default function TodoList({ data }) {
         }).then(function (response) {
             if(response.status === 200){
                 console.log("stat200",response);
+                setError(null);
                 setTodoLists((prevTodos) => [response.data.todo, ...prevTodos]);
+                setShowModal(false);
             }
         }).catch(function (error) {
             console.log("statError",error);
+            console.log("title",error.response.data.errors.title[0]);
+            setError(error.response.data.errors.title[0]);
         });
-
-        setShowModal(false);
     }
 
     // handle update or delete todo
@@ -98,11 +102,14 @@ export default function TodoList({ data }) {
                     return todo;
                 }));
                 setShowModal(false);
+                setError(null);
                 console.log("stat200",response);
             }
         }).catch(function (error) {
             // setShowModal(false);
             console.log("statError",error);
+            console.log("title",error.response.data.errors.title[0]);
+            setError(error.response.data.errors.title[0]);
         });
     }
 
@@ -120,7 +127,7 @@ export default function TodoList({ data }) {
         // });
         router.delete(`/delete-todo?todoId=${deleteTodo.todoId}`, {
             onSuccess: () => {
-                // setTodoLists((prevTodos) => prevTodos.filter((todo) => todo.id !== deleteTodo.todoId));
+                setTodoLists((prevTodos) => prevTodos.filter((todo) => todo.id !== deleteTodo.todoId));
                 setShowDeleteModal(false);
             },
             onError: (error) => {}
@@ -148,16 +155,16 @@ export default function TodoList({ data }) {
                             <div className='mb-6 flex justify-between'>
                                 <h2 className='text-2xl font-bold'>Todos</h2>
                                 <PrimaryButton
-                                    onClick={() => setShowModal(true)}
+                                    onClick={() => {setShowModal(true); handleTodoDataReset();}}
                                 >
                                     <FaPlus className='mr-2'/> Add Todo
                                 </PrimaryButton>
                             </div>
-                            <div>
+                            <div className='flex flex-col gap-2'>
                                 {
                                     todoLists.length > 0 ? todoLists.map((todo) => (
                                         <TodoCard key={todo.id} todo={todo} onSubmit={handleUpdateDeleteTodo} />
-                                    )) : <p className='text-center uppercase font-bold text-gray-600 p-6 bg-gray-50'>No todos found</p>
+                                    )) : <p className='text-center uppercase font-bold border rounded-md text-gray-600 p-6 bg-gray-50'>No todos found</p>
                                 }
                             </div>
                         </div>
@@ -175,13 +182,17 @@ export default function TodoList({ data }) {
                     : alert('Error: Something went wrong')
                 }>
                 
-                    <TodoInput
-                        label="Task Title"
-                        name="title"
-                        value={todoData.title}
-                        onChange={(e) => handleChangeTodoData('title',e.target.value)}
-                        placeholder="Enter your task title"
-                    />
+                    <div className='mb-2'>
+                        <TodoInput
+                            label="Task Title"
+                            name="title"
+                            value={todoData.title}
+                            onChange={(e) => handleChangeTodoData('title',e.target.value)}
+                            placeholder="Enter your task title"
+                            className={`${error && 'border-red-500'}`}
+                        />
+                        <small className='text-red-600'>{error}</small>
+                    </div>
                     <TodoInput
                         label="Task Description"
                         name="description"

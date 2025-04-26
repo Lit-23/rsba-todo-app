@@ -4,7 +4,7 @@ import { formatDate } from '@/Utils/utils';
 
 export default function TodoCard({ todo, onSubmit }) {
   return (
-    <div className='flex align-middle items-center bg-gray-50 px-2 py-4'>
+    <div className='flex align-middle items-center border rounded-md bg-gray-50 px-2 py-4'>
 
         {/* TASK TITLE */}
         <div className='flex-1'>{todo.title}</div>
