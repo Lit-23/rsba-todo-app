@@ -11,7 +11,6 @@ import axios from "axios";
 import { router } from '@inertiajs/react'
 
 export default function TodoList({ data }) {
-    // console.log("todoLists", todoLists);
     const [todoLists, setTodoLists] = useState(data);
     const [showModal, setShowModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -160,7 +159,7 @@ export default function TodoList({ data }) {
                                     <FaPlus className='mr-2'/> Add Todo
                                 </PrimaryButton>
                             </div>
-                            <div className='flex flex-col gap-2'>
+                            <div className='flex flex-col gap-2 pb-10'>
                                 {
                                     todoLists.length > 0 ? todoLists.map((todo) => (
                                         <TodoCard key={todo.id} todo={todo} onSubmit={handleUpdateDeleteTodo} />
@@ -221,9 +220,10 @@ export default function TodoList({ data }) {
                 </div>
                 <h2 className="text-3xl text-center font-bold">Are you sure?</h2>
                 <div className='text-center mb-4'>You wont be able to revert this!</div>
-                <div className='text-center'><span className='font-bold'>Title: </span>{deleteTodo.title}</div>
+                <div className='mb-5 text-center text-gray-600'><span className='font-bold'>Title: </span>{deleteTodo.title}</div>
+                <hr />
 
-                <div className='flex justify-end mt-2'>
+                <div className='flex justify-end mt-5'>
                     <button
                         className="px-4 py-2 uppercase text-white bg-blue-400 hover:bg-white hover:border hover:border-blue-400 hover:text-blue-400 rounded"
                         onClick={() => setShowDeleteModal(false)}
