@@ -37,8 +37,6 @@ class TodoController extends Controller
         $response = $this->todoService->createTodo($data);
 
         return response()->json($response, 200);
-
-        // return Redirect::route('todo.list')->with('success', 'Todo list created successfully!');
     }
 
     // update todo
@@ -51,9 +49,9 @@ class TodoController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $todoList = $this->todoService->updateTodo($data);
+        $response = $this->todoService->updateTodo($data);
 
-        return Redirect::route('todo.list')->with('success', 'Todo list updated successfully!');
+        return response()->json($response, 200);
     }
 
     // delete todo
@@ -63,8 +61,9 @@ class TodoController extends Controller
             'todoId' => 'required|integer|exists:todo_lists,id',
         ]);
 
-        $todoList = $this->todoService->deleteTodo($data);
+        $response = $this->todoService->deleteTodo($data);
 
         return Redirect::route('todo.list')->with('success', 'Todo list deleted successfully!');
+        // return response()->json($response, 200);
     }
 }

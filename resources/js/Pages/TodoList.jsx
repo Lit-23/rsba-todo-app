@@ -3,7 +3,7 @@ import TodoModal from '@/Components/TodoComp/TodoModal';
 import TodoCard from '@/Components/TodoComp/TodoCard';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
 import { MdOutlineErrorOutline } from "react-icons/md";
 import TodoInput from '@/Components/TodoComp/TodoInput';
@@ -54,21 +54,17 @@ export default function TodoList({ data }) {
             description: todoData.description
         }).then(function (response) {
             if(response.status === 200){
-                console.log("stat200",response);
                 setError(null);
                 setTodoLists((prevTodos) => [response.data.todo, ...prevTodos]);
                 setShowModal(false);
             }
         }).catch(function (error) {
-            console.log("statError",error);
-            console.log("title",error.response.data.errors.title[0]);
             setError(error.response.data.errors.title[0]);
         });
     }
 
     // handle update or delete todo
     const handleUpdateDeleteTodo = (action, todo_data) => {
-        console.log(action, todo_data);
         if(action === "edit"){
             handleChangeTodoData('modalTitle', 'Update Todo');
             handleChangeTodoData('todoId', todo_data.id);
@@ -102,28 +98,14 @@ export default function TodoList({ data }) {
                 }));
                 setShowModal(false);
                 setError(null);
-                console.log("stat200",response);
             }
         }).catch(function (error) {
-            // setShowModal(false);
-            console.log("statError",error);
-            console.log("title",error.response.data.errors.title[0]);
             setError(error.response.data.errors.title[0]);
         });
     }
 
     // handle delete todo
     const handleDeleteTodo = () => {
-        // axios.delete(`/delete-todo`, { params: { todoId: deleteTodo.todoId } })
-        // .then(function (response) {
-        //     if (response.status === 200) {
-        //         setShowDeleteModal(false);
-        //         console.log("stat200", response);
-        //     }
-        // })
-        // .catch(function (error) {
-        //     console.log("statError", error);
-        // });
         router.delete(`/delete-todo?todoId=${deleteTodo.todoId}`, {
             onSuccess: () => {
                 setTodoLists((prevTodos) => prevTodos.filter((todo) => todo.id !== deleteTodo.todoId));
@@ -132,10 +114,6 @@ export default function TodoList({ data }) {
             onError: (error) => {}
         })
     }
-
-    useEffect(() => {
-        console.log("todoData", todoData);
-    }, [todoData]);
 
     return (
         <AuthenticatedLayout

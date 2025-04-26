@@ -8,10 +8,6 @@ export default function TodoCard({ todo, onSubmit }) {
   const [showActions, setShowActions] = useState(false);
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    console.log('smallScreen: ', smallScreen);
-  },[smallScreen]);
-
   // Click outside listener
   useEffect(() => {
     function handleClickOutside(event) {
