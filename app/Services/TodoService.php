@@ -43,7 +43,7 @@ class TodoService
             ]);
             return [
                 'success' => true, 
-                'message' => 'Added task successfully!',
+                'message' => 'Added todo successfully!',
                 'todo' => $newTodo
             ];
 

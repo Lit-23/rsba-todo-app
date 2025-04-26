@@ -9,6 +9,7 @@ import { MdOutlineErrorOutline } from "react-icons/md";
 import TodoInput from '@/Components/TodoComp/TodoInput';
 import axios from "axios";
 import { router } from '@inertiajs/react'
+import Toast from '@/Components/TodoComp/Toast';
 
 export default function TodoList({ data }) {
     const [todoLists, setTodoLists] = useState(data);
@@ -25,6 +26,14 @@ export default function TodoList({ data }) {
         title: ''
     });
     const [error, setError] = useState(null);
+    const [showToast, setShowToast] = useState(false);
+    const [message, setMessage] = useState('');
+
+    // show toast || success message
+    const handleShowToast = () => {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000); // hide after 3s
+    };
 
     // handle change todo data
     const handleChangeTodoData = (name, value) => {
@@ -57,6 +66,8 @@ export default function TodoList({ data }) {
                 setError(null);
                 setTodoLists((prevTodos) => [response.data.todo, ...prevTodos]);
                 setShowModal(false);
+                setMessage(response.data.message ?? 'Todo created successfully');
+                setTimeout(() => handleShowToast(), 500);
             }
         }).catch(function (error) {
             setError(error.response.data.errors.title[0]);
@@ -98,6 +109,8 @@ export default function TodoList({ data }) {
                 }));
                 setShowModal(false);
                 setError(null);
+                setMessage(response.data.message ?? 'Todo updated successfully');
+                setTimeout(() => handleShowToast(), 500);
             }
         }).catch(function (error) {
             setError(error.response.data.errors.title[0]);
@@ -110,6 +123,8 @@ export default function TodoList({ data }) {
             onSuccess: () => {
                 setTodoLists((prevTodos) => prevTodos.filter((todo) => todo.id !== deleteTodo.todoId));
                 setShowDeleteModal(false);
+                setMessage("Todo deleted successfully");
+                setTimeout(() => handleShowToast(), 1500);
             },
             onError: (error) => {}
         })
@@ -126,7 +141,16 @@ export default function TodoList({ data }) {
             <Head title="TodoList" />
 
             <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                <div className="relative mx-auto max-w-7xl sm:px-6 lg:px-8">
+            
+                    {/* ------ START ------ TOAST COMPONENT ------ START ------ */}
+                    <Toast
+                        message={message}
+                        show={showToast}
+                        onClose={() => setShowToast(false)}
+                    />
+                    {/* ------ END ------ TOAST COMPONENT ------ END ------ */}
+
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
                             <div className='mb-6 flex justify-between'>
