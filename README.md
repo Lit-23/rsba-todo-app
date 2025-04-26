@@ -30,4 +30,15 @@ Once done, you now run:
 - npm run dev           <!-- on terminal 1 run this command -->
 - php artisan serve     <!-- open another terminal and run this command. the project is now running on your local browser. -->
 
+Seeding users data:
+- php artisan db:seed --class=UserSeeder
+
+Seeded Users are as follows:
+User1:
+- email: admin@gmail.com
+- password: 12345678
+User2:
+- email: user@gmail.com
+- password: 12345678
+
 That is all for the Installation and Configuration of Laravel + React Project.

@@ -15,17 +15,34 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create multiple users
-        User::create([
-            'name' => 'Admin User',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
+        // Create Admin User if it doesn't exist
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@gmail.com'], // Check if a user with this email exists
+            [
+                'name' => 'Admin User',
+                'password' => Hash::make('12345678'), // Create with these attributes if it doesn't exist
+            ]
+        );
 
-        User::create([
-            'name' => 'Regular User',
-            'email' => 'user@gmail.com',
-            'password' => Hash::make('12345678'),
-        ]);
+        if ($admin->wasRecentlyCreated) {
+            $this->command->info('Admin user has been created.');
+        } else {
+            $this->command->info('Admin user already exists.');
+        }
+
+        // Create Regular User if it doesn't exist
+        $user = User::firstOrCreate(
+            ['email' => 'user@gmail.com'], // Check if a user with this email exists
+            [
+                'name' => 'Regular User',
+                'password' => Hash::make('12345678'),
+            ]
+        );
+
+        if ($user->wasRecentlyCreated) {
+            $this->command->info('Regular user has been created.');
+        } else {
+            $this->command->info('Regular user already exists.');
+        }
     }
 }
