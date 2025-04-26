@@ -159,7 +159,7 @@ export default function TodoList({ data }) {
                                     <FaPlus className='mr-2'/> Add Todo
                                 </PrimaryButton>
                             </div>
-                            <div className='flex flex-col gap-2 pb-10'>
+                            <div className='flex flex-col gap-2 pb-12'>
                                 {
                                     todoLists.length > 0 ? todoLists.map((todo) => (
                                         <TodoCard key={todo.id} todo={todo} onSubmit={handleUpdateDeleteTodo} />

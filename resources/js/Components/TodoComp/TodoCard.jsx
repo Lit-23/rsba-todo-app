@@ -44,7 +44,7 @@ export default function TodoCard({ todo, onSubmit }) {
               </button>
     
               {showActions && (
-                <div className="absolute right-0 mt-2 w-32 bg-white shadow-md rounded border">
+                <div className="absolute right-0 mt-2 w-32 bg-white shadow-md rounded border z-10">
                   <button
                     onClick={() => {
                       onSubmit('edit', todo);
