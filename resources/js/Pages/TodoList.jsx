@@ -5,17 +5,24 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { FaPlus } from "react-icons/fa6";
+import { MdOutlineErrorOutline } from "react-icons/md";
 import TodoInput from '@/Components/TodoComp/TodoInput';
 import axios from "axios";
+import { router } from '@inertiajs/react'
 
 export default function TodoList({ todoLists }) {
     // console.log("todoLists", todoLists);
     const [showModal, setShowModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [todoData, setTodoData] = useState({
         modalTitle: 'Create Todo',
         todoId: null,
         title: '',
         description: '',
+    });
+    const [deleteTodo, setDeleteTodo] = useState({
+        todoId: null,
+        title: ''
     });
 
     // handle change todo data
@@ -64,8 +71,11 @@ export default function TodoList({ todoLists }) {
             handleChangeTodoData('description', todo_data.description);
             setShowModal(true);
         }else if(action === "delete"){
-            // handle delete todo
-            alert(`Todo Deleted: ${todo_data.title}`);
+            setDeleteTodo({
+                todoId: todo_data.id,
+                title: todo_data.title
+            });
+            setShowDeleteModal(true);
         }
     }
 
@@ -82,6 +92,26 @@ export default function TodoList({ todoLists }) {
             // setShowModal(false);
             console.log("statError",error);
         });
+    }
+
+    // handle delete todo
+    const handleDeleteTodo = () => {
+        // axios.delete(`/delete-todo`, { params: { todoId: deleteTodo.todoId } })
+        // .then(function (response) {
+        //     if (response.status === 200) {
+        //         setShowDeleteModal(false);
+        //         console.log("stat200", response);
+        //     }
+        // })
+        // .catch(function (error) {
+        //     console.log("statError", error);
+        // });
+        router.delete(`/delete-todo?todoId=${deleteTodo.todoId}`, {
+            onSuccess: () => {
+                setShowDeleteModal(false);
+            },
+            onError: (error) => {}
+        })
     }
 
     useEffect(() => {
@@ -158,6 +188,34 @@ export default function TodoList({ todoLists }) {
                 </form>
             </TodoModal>
             {/* END   ------------------ CREATE OR UPDATE TODO ------------------   END */}
+
+            
+            {/* START --------------------- DELETE TODO --------------------- START */}
+            <TodoModal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
+                <div className='flex justify-center mb-4'>
+                    <MdOutlineErrorOutline className='h-20 w-20 text-red-500'/>
+                </div>
+                <h2 className="text-3xl text-center font-bold">Are you sure?</h2>
+                <div className='text-center mb-4'>You wont be able to revert this!</div>
+                <div className='text-center'><span className='font-bold'>Title: </span>{deleteTodo.title}</div>
+
+                <div className='flex justify-end mt-2'>
+                    <button
+                        className="px-4 py-2 uppercase text-white bg-blue-400 hover:bg-white hover:border hover:border-blue-400 hover:text-blue-400 rounded"
+                        onClick={() => setShowDeleteModal(false)}
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        className="ml-2 px-4 py-2 uppercase border border-red-500 text-red-500 hover:text-white hover:bg-red-500 rounded"
+                        onClick={handleDeleteTodo}
+                    >
+                        Delete
+                    </button>
+                </div>
+                
+            </TodoModal>
+            {/* END   --------------------- DELETE TODO ---------------------   END */}
 
         </AuthenticatedLayout>
     );

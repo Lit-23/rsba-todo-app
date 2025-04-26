@@ -19,6 +19,7 @@ Route::middleware('auth', 'verified')->group(function () {
     Route::get('/todo-list', [TodoController::class, 'index'])->name('todo.list');
     Route::post('/create-todo', [TodoController::class, 'create'])->name('create.todo');
     Route::post('/update-todo', [TodoController::class, 'update'])->name('update.todo');
+    Route::delete('/delete-todo', [TodoController::class, 'delete'])->name('delete.todo');
 });
 
 Route::middleware('auth')->group(function () {

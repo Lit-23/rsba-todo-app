@@ -53,4 +53,16 @@ class TodoController extends Controller
 
         return Redirect::route('todo.list')->with('success', 'Todo list updated successfully!');
     }
+
+    // delete todo
+    public function delete(Request $request)
+    {
+        $data = $request->validate([
+            'todoId' => 'required|integer|exists:todo_lists,id',
+        ]);
+
+        $todoList = $this->todoService->deleteTodo($data);
+
+        return Redirect::route('todo.list')->with('success', 'Todo list deleted successfully!');
+    }
 }

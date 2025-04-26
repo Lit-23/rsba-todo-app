@@ -75,5 +75,18 @@ class TodoService
         }
     }
 
+    // delete todo
+    public function deleteTodo($data)
+    {
+        $todo = TodoList::find($data["todoId"]);
+
+        if ($todo) {
+            $todo->delete();
+            return ['success' => true, 'message' => 'Deleted todo successfully!'];
+        } else {
+            return ['success' => false, 'message' => 'Todo not found!'];
+        }
+    }
+
 
 }
